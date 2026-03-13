@@ -32,7 +32,7 @@ export function Input({
 
   return (
     <div className={`space-y-2 ${className}`}>
-      <label className="block text-sm font-medium text-gray-700">
+      <label className="block text-sm font-medium text-gray-700 tracking-tight">
         {label}
       </label>
       <div className="relative">
@@ -48,7 +48,7 @@ export function Input({
           min={min}
           max={max}
           step={step}
-          className={`w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all ${
+          className={`w-full px-4 py-2.5 border border-emerald-200 rounded-xl bg-white/90 focus:ring-2 focus:ring-cyan-300 focus:border-cyan-400 outline-none transition-all ${
             prefix ? 'pl-8' : ''
           } ${suffix ? 'pr-12' : ''}`}
         />

@@ -2,3 +2,52 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+:root {
+  --pc-bg-1: #ecfeff;
+  --pc-bg-2: #eef2ff;
+  --pc-bg-3: #f0fdf4;
+  --pc-accent: #10b981;
+  --pc-accent-2: #06b6d4;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+html {
+  scrollbar-gutter: stable;
+}
+
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  background:
+    radial-gradient(900px 500px at 10% -10%, rgba(6, 182, 212, 0.14), transparent 60%),
+    radial-gradient(700px 420px at 90% 0%, rgba(16, 185, 129, 0.14), transparent 60%),
+    linear-gradient(135deg, var(--pc-bg-1), var(--pc-bg-2) 45%, var(--pc-bg-3));
+  color: #111827;
+}
+
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, var(--pc-accent-2), var(--pc-accent));
+  border: 2px solid #ffffff;
+  box-shadow: 0 3px 10px rgba(6, 182, 212, 0.35);
+}
+
+input[type='range']::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, var(--pc-accent-2), var(--pc-accent));
+  border: 2px solid #ffffff;
+  box-shadow: 0 3px 10px rgba(6, 182, 212, 0.35);
+}

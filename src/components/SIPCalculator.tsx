@@ -82,6 +82,16 @@ export function SIPCalculator({ onNavigate }: SIPCalculatorProps) {
 
   const maxAge = currentAge + years;
 
+  const getTextColorForBackground = (hexColor: string) => {
+    const hex = hexColor.replace('#', '');
+    if (hex.length !== 6) return '#ffffff';
+    const r = parseInt(hex.slice(0, 2), 16);
+    const g = parseInt(hex.slice(2, 4), 16);
+    const b = parseInt(hex.slice(4, 6), 16);
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    return brightness > 160 ? '#111827' : '#ffffff';
+  };
+
   const getMilestoneSnapshot = (age: number) => {
     const exactMatch = chartData.find((point) => Number(point.age) === Number(age));
     if (exactMatch) return exactMatch;
@@ -104,23 +114,23 @@ export function SIPCalculator({ onNavigate }: SIPCalculatorProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-lime-50">
-      <header className="sticky top-0 z-30 border-b border-emerald-200 bg-white/80 backdrop-blur">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-emerald-600 to-green-500 text-white flex items-center justify-center font-bold">
+    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-emerald-50 to-indigo-50">
+      <header className="sticky top-0 z-30 border-b border-emerald-200/80 bg-white/70 backdrop-blur-xl">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-cyan-500 to-emerald-500 text-white flex items-center justify-center font-bold shadow-md">
               PC
             </div>
-            <div>
-              <p className="text-lg font-bold text-emerald-900 leading-tight">PracticalCalculators</p>
-              <p className="text-xs text-emerald-700">Smart tools for practical money decisions</p>
+            <div className="min-w-0">
+              <p className="truncate text-base sm:text-lg font-bold text-emerald-900 leading-tight">PracticalCalculators</p>
+              <p className="truncate text-[11px] sm:text-xs text-emerald-700">Smart tools for practical money decisions</p>
             </div>
           </div>
-          <nav className="hidden md:flex items-center gap-4 text-sm font-medium text-emerald-800">
+          <nav className="flex shrink-0 items-center gap-4 text-sm font-medium text-emerald-800">
             <button
               type="button"
               onClick={() => navigateTo('/about')}
-              className="rounded-lg border border-emerald-300 bg-white px-4 py-2 hover:text-emerald-600 hover:border-emerald-400 transition-colors"
+              className="rounded-xl border border-cyan-200 bg-white/90 px-3 sm:px-4 py-2 text-xs sm:text-sm hover:text-cyan-600 hover:border-cyan-400 transition-colors"
             >
               About
             </button>
@@ -130,7 +140,7 @@ export function SIPCalculator({ onNavigate }: SIPCalculatorProps) {
 
       <div className="max-w-7xl mx-auto py-8 px-4">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+          <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-emerald-600 mb-2">
             Practical Step Up SIP Calculator
           </h1>
           <p className="text-gray-600">
@@ -289,7 +299,6 @@ export function SIPCalculator({ onNavigate }: SIPCalculatorProps) {
                 title={`Computed Numbers (Age ${finalProjection.age})`}
                 className="bg-white border-2 border-emerald-300 shadow-lg ring-1 ring-emerald-100"
               >
-                <div className="h-1.5 w-28 rounded-full bg-emerald-500 mb-4" />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   <div className="bg-emerald-50 rounded-xl border border-emerald-200 p-5">
                     <p className="text-sm text-emerald-800 font-medium mb-1">Total Wealth (Real)</p>
@@ -378,11 +387,11 @@ export function SIPCalculator({ onNavigate }: SIPCalculatorProps) {
                 </div>
               </Card>
 
-              <Card title="3. Growth Projection">
+              <Card title="3. Growth Projection" className="relative z-20 overflow-visible">
                 <div className="flex justify-end mb-4">
                 <button
                   onClick={() => setShowMilestoneModal(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 hover:shadow-lg transition-colors font-medium"
+                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-cyan-500 to-emerald-500 text-white rounded-xl hover:brightness-95 hover:shadow-lg transition font-medium"
                 >
                   <Zap size={18} />
                   Add Life Milestones
@@ -396,18 +405,19 @@ export function SIPCalculator({ onNavigate }: SIPCalculatorProps) {
                   maxAge={maxAge}
                 />
                 {milestones.length > 0 && (
-                  <div className="mt-4 p-4 bg-purple-50 rounded-lg border border-purple-200">
+                  <div className="relative z-30 mt-4 p-4 bg-purple-50 rounded-lg border border-purple-200 overflow-visible">
                     <p className="text-sm text-purple-800 font-medium mb-2">Milestones Added: {milestones.length}</p>
                     <div className="flex flex-wrap gap-2">
                       {milestones.map((m) => {
                         const snapshot = getMilestoneSnapshot(m.age);
+                        const labelColor = getTextColorForBackground(m.color);
 
                         return (
-                          <div key={m.id} className="relative group flex items-center">
+                          <div key={m.id} className="relative z-40 group flex items-center rounded-full ring-2 ring-white shadow-sm">
                             <button
                               type="button"
-                              className="px-3 py-1 rounded-l-full text-xs font-medium text-white hover:brightness-95 transition"
-                              style={{ backgroundColor: m.color }}
+                              className="px-3 py-1 rounded-l-full text-xs font-semibold hover:brightness-95 transition"
+                              style={{ backgroundColor: m.color, color: labelColor }}
                             >
                               {m.label} ({m.age})
                             </button>
@@ -415,35 +425,24 @@ export function SIPCalculator({ onNavigate }: SIPCalculatorProps) {
                               type="button"
                               aria-label={`Delete milestone ${m.label}`}
                               onClick={() => handleDeleteMilestone(m.id)}
-                              className="px-2 py-1 rounded-r-full text-xs font-bold text-white/95 hover:text-white hover:brightness-90 transition"
-                              style={{ backgroundColor: m.color }}
+                              className="px-2 py-1 rounded-r-full text-xs font-bold hover:brightness-90 transition border-l border-white/30"
+                              style={{ backgroundColor: m.color, color: labelColor }}
                             >
                               x
                             </button>
 
                             {snapshot && (
-                              <div className="pointer-events-none absolute left-1/2 z-20 mt-2 w-72 -translate-x-1/2 rounded-lg border border-purple-200 bg-white p-3 opacity-0 shadow-lg transition-opacity duration-150 group-hover:opacity-100">
+                              <div className="pointer-events-none absolute top-full left-1/2 z-[100] mt-2 w-72 -translate-x-1/2 rounded-lg border border-purple-200 bg-white p-3 opacity-0 shadow-xl transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100">
                                 <p className="text-xs text-purple-700 font-medium mb-1">
                                   {m.label} (Age {m.age})
                                 </p>
-                                <div className="grid grid-cols-2 gap-2 text-xs">
-                                  <p className="text-gray-700">
-                                    Invested: {formatIndianCurrency(snapshot['Total Invested'])}
-                                  </p>
-                                  <p className="text-blue-700">
-                                    SIP: {formatIndianCurrency(snapshot['SIP Corpus'])}
-                                  </p>
-                                  <p className="text-amber-700">
-                                    Net Worth: {formatIndianCurrency(snapshot['Net Worth'])}
-                                  </p>
+                                <div className="grid gap-2 text-xs">
                                   <p className="text-green-700">
-                                    Wealth: {formatIndianCurrency(snapshot['Total Wealth'])}
+                                    Nominal Net Worth: {formatIndianCurrency(snapshot['Total Wealth'])}
                                   </p>
-                                  {showInflationAdjusted && (
-                                    <p className="text-purple-700 col-span-2">
-                                      Wealth (Real): {formatIndianCurrency(snapshot['Total Wealth (Real)'])}
-                                    </p>
-                                  )}
+                                  <p className="text-purple-700">
+                                    Real Net Worth: {formatIndianCurrency(snapshot['Total Wealth (Real)'])}
+                                  </p>
                                 </div>
                               </div>
                             )}
@@ -457,7 +456,7 @@ export function SIPCalculator({ onNavigate }: SIPCalculatorProps) {
             </div>
           </div>
 
-          <div className="space-y-6">
+          <div className="relative z-0 space-y-6">
             <Card title="Age-by-Age Breakdown" className="w-full max-h-[42rem] overflow-y-auto">
               <table className="w-full text-xs">
                 <thead className="bg-gray-50 sticky top-0">

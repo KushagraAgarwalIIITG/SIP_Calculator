@@ -21,24 +21,24 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white">
-      <header className="sticky top-0 z-30 border-b border-emerald-100 bg-white/90 backdrop-blur">
+    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-emerald-50 to-indigo-50">
+      <header className="sticky top-0 z-30 border-b border-emerald-200/80 bg-white/70 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <button type="button" onClick={() => navigateTo('/home')} className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-emerald-600 to-green-500 text-white flex items-center justify-center font-bold">
+          <div className="flex items-center gap-3">
+            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-cyan-500 to-emerald-500 text-white flex items-center justify-center font-bold shadow-md">
               PC
             </div>
             <div>
               <p className="text-lg font-bold text-emerald-900 leading-tight">PracticalCalculators</p>
               <p className="text-xs text-emerald-700">Smart tools for practical money decisions</p>
             </div>
-          </button>
+          </div>
 
-          <nav className="hidden md:flex items-center gap-3 text-sm font-medium text-emerald-800">
+          <nav className="flex shrink-0 items-center gap-4 text-sm font-medium text-emerald-800">
             <button
               type="button"
               onClick={() => navigateTo('/home')}
-              className="rounded-lg border border-emerald-300 bg-white px-4 py-2 hover:text-emerald-600 hover:border-emerald-400 transition-colors"
+              className="rounded-xl border border-cyan-200 bg-white/90 px-3 sm:px-4 py-2 text-xs sm:text-sm hover:text-cyan-600 hover:border-cyan-400 transition-colors"
             >
               Home
             </button>
@@ -48,7 +48,7 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
 
       <main className="max-w-5xl mx-auto px-4 py-14">
         <section className="grid md:grid-cols-[1.5fr_1fr] gap-6">
-          <div className="rounded-2xl border border-emerald-200/80 bg-white p-8">
+          <div className="rounded-2xl border border-emerald-200/80 bg-white/90 backdrop-blur-xl p-8 shadow-sm">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700 mb-3">Our Mission</p>
             <h1 className="text-3xl font-semibold text-emerald-900 mb-4">Financial calculators built for real Indian needs.</h1>
             <p className="text-emerald-800 leading-relaxed text-[15px]">
@@ -62,14 +62,14 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
             </p>
           </div>
 
-          <aside className="rounded-2xl border border-emerald-200/80 bg-white p-6 h-fit">
+          <aside className="rounded-2xl border border-emerald-200/80 bg-white/90 backdrop-blur-xl p-6 h-fit shadow-sm">
             <h2 className="text-lg font-semibold text-emerald-900 mb-4">Get in touch</h2>
             <div className="space-y-3 text-sm">
               <a
                 href="https://www.linkedin.com/in/kushagraagggarwal/"
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-2 text-emerald-800 hover:text-emerald-600 transition-colors"
+                className="flex items-center gap-2 text-emerald-800 hover:text-cyan-600 transition-colors"
               >
                 <LinkedInBrandIcon />
                 Kushagra Agarwal
@@ -78,7 +78,7 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
                 href="https://www.linkedin.com/in/priyapampati/"
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-2 text-emerald-800 hover:text-emerald-600 transition-colors"
+                className="flex items-center gap-2 text-emerald-800 hover:text-cyan-600 transition-colors"
               >
                 <LinkedInBrandIcon />
                 Priya Pampati
