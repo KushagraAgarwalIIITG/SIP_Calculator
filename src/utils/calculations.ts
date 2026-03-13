@@ -14,8 +14,12 @@ export interface SIPProjection {
   sipAmount: number;
   yearlyInvestment: number;
   cumulativeInvestment: number;
-  nominalValue: number;
-  realValue: number;
+  sipNominalValue: number;
+  sipRealValue: number;
+  netWorthNominal: number;
+  netWorthReal: number;
+  totalNominalValue: number;
+  totalRealValue: number;
 }
 
 export function calculateTax(annualSalary: number): TaxCalculation {
@@ -65,12 +69,14 @@ export function calculateSIPProjection(
   years: number,
   salaryPlateauLimit: number,
   inflationRate: number,
-  currentAge: number
+  currentAge: number,
+  currentNetWorth: number = 0
 ): SIPProjection[] {
   const projections: SIPProjection[] = [];
   let currentSIP = initialSIPAmount;
   let totalInvested = 0;
-  let corpusValue = 0;
+  let sipCorpusValue = 0;
+  let netWorthValue = currentNetWorth;
   let salary = currentSalary;
 
   const monthlyROI = roiPercent / 100 / 12;
@@ -81,12 +87,16 @@ export function calculateSIPProjection(
     const yearlyInvestment = monthlySIP * 12;
 
     for (let month = 0; month < 12; month++) {
-      corpusValue = (corpusValue + monthlySIP) * (1 + monthlyROI);
+      sipCorpusValue = (sipCorpusValue + monthlySIP) * (1 + monthlyROI);
+      netWorthValue = netWorthValue * (1 + monthlyROI);
     }
 
     totalInvested += yearlyInvestment;
 
-    const realValue = corpusValue / Math.pow(1 + inflationRate / 100, year);
+    const sipRealValue = sipCorpusValue / Math.pow(1 + inflationRate / 100, year);
+    const netWorthReal = netWorthValue / Math.pow(1 + inflationRate / 100, year);
+    const totalNominalValue = sipCorpusValue + netWorthValue;
+    const totalRealValue = sipRealValue + netWorthReal;
 
     projections.push({
       year,
@@ -96,8 +106,12 @@ export function calculateSIPProjection(
       sipAmount: monthlySIP,
       yearlyInvestment,
       cumulativeInvestment: totalInvested,
-      nominalValue: corpusValue,
-      realValue
+      sipNominalValue: sipCorpusValue,
+      sipRealValue,
+      netWorthNominal: netWorthValue,
+      netWorthReal,
+      totalNominalValue,
+      totalRealValue
     });
 
     if (salary < salaryPlateauLimit) {

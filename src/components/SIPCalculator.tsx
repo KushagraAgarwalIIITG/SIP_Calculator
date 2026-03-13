@@ -13,7 +13,7 @@ export function SIPCalculator() {
   const [currentSalary, setCurrentSalary] = useSessionStorage('sip_salary', 1200000);
   const [currentAge, setCurrentAge] = useSessionStorage('sip_age', 28);
   const [sipAmount, setSipAmount] = useSessionStorage('sip_amount', 20000);
-  const [maxSipLimit, setMaxSipLimit] = useSessionStorage('sip_max_limit', 100000);
+  const [currentNetWorth, setCurrentNetWorth] = useSessionStorage('sip_networth', 500000);
   const [roiPercent, setRoiPercent] = useSessionStorage('sip_roi', 12);
   const [years, setYears] = useSessionStorage('sip_years', 25);
   const [plateauLimit, setPlateauLimit] = useSessionStorage('sip_plateau', 7000000);
@@ -24,30 +24,31 @@ export function SIPCalculator() {
 
   const currentTaxCalc = useMemo(() => calculateTax(currentSalary), [currentSalary]);
 
-  const effectiveSipAmount = Math.min(sipAmount, maxSipLimit);
-
   const projections = useMemo(
     () =>
       calculateSIPProjection(
         currentSalary,
-        effectiveSipAmount,
+        sipAmount,
         roiPercent,
         years,
         plateauLimit,
         inflationRate,
-        currentAge
+        currentAge,
+        currentNetWorth
       ),
-    [currentSalary, effectiveSipAmount, roiPercent, years, plateauLimit, inflationRate, currentAge]
+    [currentSalary, sipAmount, roiPercent, years, plateauLimit, inflationRate, currentAge, currentNetWorth]
   );
 
   const finalProjection = projections[projections.length - 1];
-  const savingsRate = (effectiveSipAmount * 12 / currentTaxCalc.postTaxSalary) * 100;
+  const savingsRate = (sipAmount * 12 / currentTaxCalc.postTaxSalary) * 100;
 
   const chartData = projections.map((p) => ({
     year: p.year,
     age: p.age,
-    'Nominal Value': Math.round(p.nominalValue),
-    'Real Value': Math.round(p.realValue),
+    'SIP Corpus': Math.round(p.sipNominalValue),
+    'Net Worth': Math.round(p.netWorthNominal),
+    'Total Wealth': Math.round(p.totalNominalValue),
+    'Total Wealth (Real)': Math.round(p.totalRealValue),
     'Total Invested': Math.round(p.cumulativeInvestment)
   }));
 
@@ -113,7 +114,7 @@ export function SIPCalculator() {
               </div>
             </Card>
 
-            <Card title="SIP Configuration">
+            <Card title="SIP & Current Net Worth">
               <div className="space-y-6">
                 <Slider
                   label="Monthly SIP Amount"
@@ -125,17 +126,17 @@ export function SIPCalculator() {
                   formatValue={formatIndianCurrency}
                 />
                 <Slider
-                  label="Max SIP Limit"
-                  value={maxSipLimit}
-                  onChange={setMaxSipLimit}
-                  min={5000}
-                  max={500000}
-                  step={10000}
+                  label="Current Net Worth"
+                  value={currentNetWorth}
+                  onChange={setCurrentNetWorth}
+                  min={0}
+                  max={10000000}
+                  step={100000}
                   formatValue={formatIndianCurrency}
                 />
                 <div className="bg-blue-50 rounded-lg p-3 border border-blue-100">
                   <p className="text-sm text-blue-800 mb-2">
-                    <span className="font-semibold">Effective Monthly SIP:</span> {formatIndianCurrency(effectiveSipAmount)}
+                    <span className="font-semibold">Monthly SIP:</span> {formatIndianCurrency(sipAmount)}
                   </p>
                   <p className="text-sm text-blue-800">
                     <span className="font-semibold">Savings Rate:</span> {savingsRate.toFixed(1)}% of post-tax salary
@@ -200,25 +201,37 @@ export function SIPCalculator() {
           </div>
 
           <div className="space-y-6">
-            <Card title="Projected Wealth">
+            <Card title={`Projected Wealth at Age ${finalProjection.age}`}>
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <MetricCard
-                  label="Final Corpus (Nominal)"
-                  value={formatIndianCurrency(finalProjection.nominalValue)}
-                  subValue={`At age ${finalProjection.age}`}
+                  label="Total Wealth (Nominal)"
+                  value={formatIndianCurrency(finalProjection.totalNominalValue)}
+                  subValue="SIP + Net Worth"
                   icon={<Target size={20} />}
+                />
+                <MetricCard
+                  label="SIP Corpus"
+                  value={formatIndianCurrency(finalProjection.sipNominalValue)}
+                  subValue={`From ₹${(sipAmount).toLocaleString('en-IN')}/mo`}
+                  icon={<PiggyBank size={20} />}
+                />
+                <MetricCard
+                  label="Compounded Net Worth"
+                  value={formatIndianCurrency(finalProjection.netWorthNominal)}
+                  subValue={`From ₹${formatIndianCurrency(currentNetWorth)}`}
+                  icon={<Wallet size={20} />}
                 />
                 <MetricCard
                   label="Total Invested"
                   value={formatIndianCurrency(finalProjection.cumulativeInvestment)}
                   subValue={`Over ${years} years`}
-                  icon={<PiggyBank size={20} />}
+                  icon={<Calendar size={20} />}
                 />
                 {showInflationAdjusted && (
                   <>
                     <MetricCard
-                      label="Real Value (Today's Money)"
-                      value={formatIndianCurrency(finalProjection.realValue)}
+                      label="Total Wealth (Real)"
+                      value={formatIndianCurrency(finalProjection.totalRealValue)}
                       subValue={`@${inflationRate}% inflation`}
                       icon={<TrendingUp size={20} />}
                     />
@@ -226,19 +239,19 @@ export function SIPCalculator() {
                       label="Final Monthly SIP"
                       value={formatIndianCurrency(finalProjection.sipAmount)}
                       subValue="After step-ups"
-                      icon={<Calendar size={20} />}
+                      icon={<Calculator size={20} />}
                     />
                   </>
                 )}
               </div>
 
               <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border border-green-200">
-                <p className="text-sm text-green-800 mb-1 font-medium">Wealth Created</p>
+                <p className="text-sm text-green-800 mb-1 font-medium">Total Wealth Gain</p>
                 <p className="text-3xl font-bold text-green-900">
-                  {formatIndianCurrency(finalProjection.nominalValue - finalProjection.cumulativeInvestment)}
+                  {formatIndianCurrency(finalProjection.totalNominalValue - currentNetWorth - finalProjection.cumulativeInvestment)}
                 </p>
-                <p className="text-xs text-green-700 mt-1">
-                  {((finalProjection.nominalValue / finalProjection.cumulativeInvestment - 1) * 100).toFixed(1)}% return on investment
+                <p className="text-xs text-green-700 mt-2">
+                  Initial Net Worth: {formatIndianCurrency(currentNetWorth)} • SIP Invested: {formatIndianCurrency(finalProjection.cumulativeInvestment)}
                 </p>
               </div>
             </Card>
@@ -278,26 +291,32 @@ export function SIPCalculator() {
               )}
             </Card>
 
-            <Card title="Year-by-Year Breakdown" className="max-h-96 overflow-y-auto">
-              <table className="w-full text-sm">
+            <Card title="Age-by-Age Breakdown" className="max-h-96 overflow-y-auto">
+              <table className="w-full text-xs">
                 <thead className="bg-gray-50 sticky top-0">
                   <tr>
-                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-600">Year</th>
-                    <th className="px-3 py-2 text-right text-xs font-medium text-gray-600">Age</th>
-                    <th className="px-3 py-2 text-right text-xs font-medium text-gray-600">Monthly SIP</th>
-                    <th className="px-3 py-2 text-right text-xs font-medium text-gray-600">Corpus</th>
+                    <th className="px-2 py-2 text-left text-xs font-medium text-gray-600">Age</th>
+                    <th className="px-2 py-2 text-right text-xs font-medium text-gray-600">Monthly SIP</th>
+                    <th className="px-2 py-2 text-right text-xs font-medium text-gray-600">SIP Corpus</th>
+                    <th className="px-2 py-2 text-right text-xs font-medium text-gray-600">Net Worth</th>
+                    <th className="px-2 py-2 text-right text-xs font-medium text-gray-600">Total Wealth</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {projections.filter((_, i) => i % 5 === 0 || i === projections.length - 1).map((p) => (
                     <tr key={p.year} className="hover:bg-gray-50">
-                      <td className="px-3 py-2 text-gray-900">{p.year}</td>
-                      <td className="px-3 py-2 text-right text-gray-700">{p.age}</td>
-                      <td className="px-3 py-2 text-right text-gray-900 font-medium">
+                      <td className="px-2 py-2 text-gray-900 font-medium">{p.age}</td>
+                      <td className="px-2 py-2 text-right text-gray-700 text-xs">
                         {formatIndianCurrency(p.sipAmount)}
                       </td>
-                      <td className="px-3 py-2 text-right text-gray-900 font-semibold">
-                        {formatIndianCurrency(p.nominalValue)}
+                      <td className="px-2 py-2 text-right text-blue-600 font-semibold text-xs">
+                        {formatIndianCurrency(p.sipNominalValue)}
+                      </td>
+                      <td className="px-2 py-2 text-right text-amber-600 font-semibold text-xs">
+                        {formatIndianCurrency(p.netWorthNominal)}
+                      </td>
+                      <td className="px-2 py-2 text-right text-green-600 font-bold text-xs">
+                        {formatIndianCurrency(p.totalNominalValue)}
                       </td>
                     </tr>
                   ))}

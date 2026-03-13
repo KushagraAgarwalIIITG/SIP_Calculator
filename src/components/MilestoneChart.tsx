@@ -1,4 +1,3 @@
-
 import {
   LineChart,
   Line,
@@ -23,26 +22,19 @@ interface MilestoneChartProps {
   maxAge: number;
 }
 
-// const MilestoneReferenceDot = (props: any) => {
-//   const { cx, cy, fill } = props;
-//   return (
-//     <circle cx={cx} cy={cy} r={5} fill={fill} stroke="white" strokeWidth={2} />
-//   );
-// };
-
 export function MilestoneChart({
   data,
   milestones,
-  showInflationAdjusted
-  //minAge,
-  //maxAge
+  showInflationAdjusted,
+  minAge,
+  maxAge
 }: MilestoneChartProps) {
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-white p-4 rounded-lg shadow-lg border border-gray-200">
           <p className="font-semibold text-gray-900 mb-2">
-            Year {payload[0].payload.year} (Age {payload[0].payload.age})
+            Age {payload[0].payload.age}
           </p>
           {payload.map((entry: any, index: number) => (
             <p key={index} className="text-sm" style={{ color: entry.color }}>
@@ -60,9 +52,11 @@ export function MilestoneChart({
       <LineChart data={data} margin={{ top: 60, right: 30, left: 20, bottom: 5 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
         <XAxis
-          dataKey="year"
-          label={{ value: 'Years', position: 'insideBottom', offset: -5 }}
+          dataKey="age"
+          label={{ value: 'Age', position: 'insideBottom', offset: -5 }}
           tick={{ fontSize: 12 }}
+          type="number"
+          domain={[minAge, maxAge]}
         />
         <YAxis
           tickFormatter={(value) => formatIndianCurrency(value)}
@@ -78,7 +72,7 @@ export function MilestoneChart({
           return (
             <ReferenceLine
               key={`${milestone.id}-ref`}
-              x={dataPoint.year}
+              x={milestone.age}
               stroke={milestone.color}
               strokeDasharray="3 3"
               opacity={0.4}
@@ -104,16 +98,30 @@ export function MilestoneChart({
         />
         <Line
           type="monotone"
-          dataKey="Nominal Value"
+          dataKey="SIP Corpus"
           stroke="#3b82f6"
+          strokeWidth={2.5}
+          dot={false}
+        />
+        <Line
+          type="monotone"
+          dataKey="Net Worth"
+          stroke="#f59e0b"
+          strokeWidth={2.5}
+          dot={false}
+        />
+        <Line
+          type="monotone"
+          dataKey="Total Wealth"
+          stroke="#10b981"
           strokeWidth={3}
           dot={false}
         />
         {showInflationAdjusted && (
           <Line
             type="monotone"
-            dataKey="Real Value"
-            stroke="#10b981"
+            dataKey="Total Wealth (Real)"
+            stroke="#8b5cf6"
             strokeWidth={3}
             dot={false}
             strokeDasharray="5 5"
@@ -126,9 +134,9 @@ export function MilestoneChart({
 
           return (
             <ReferenceDot
-              key={`${milestone.id}-dot-nominal`}
-              x={dataPoint.year}
-              y={dataPoint['Nominal Value']}
+              key={`${milestone.id}-dot-wealth`}
+              x={milestone.age}
+              y={dataPoint['Total Wealth']}
               r={6}
               fill={milestone.color}
               stroke="white"
@@ -145,8 +153,8 @@ export function MilestoneChart({
             return (
               <ReferenceDot
                 key={`${milestone.id}-dot-real`}
-                x={dataPoint.year}
-                y={dataPoint['Real Value']}
+                x={milestone.age}
+                y={dataPoint['Total Wealth (Real)']}
                 r={5}
                 fill={milestone.color}
                 stroke="white"
