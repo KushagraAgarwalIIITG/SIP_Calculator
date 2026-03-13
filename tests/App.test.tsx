@@ -16,16 +16,18 @@ vi.mock('../src/components/AboutPage', () => ({
 describe('App routing', () => {
   it('normalizes root route to /home', () => {
     window.history.pushState({}, '', '/');
+    window.location.hash = '';
     render(<App />);
-    expect(window.location.pathname).toBe('/home');
+    expect(window.location.hash).toBe('#/home');
     expect(screen.getByRole('button', { name: /go about/i })).toBeInTheDocument();
   });
 
   it('renders about route and navigates back to home', () => {
-    window.history.pushState({}, '', '/about');
+    window.history.pushState({}, '', '/');
+    window.location.hash = '#/about';
     render(<App />);
 
     fireEvent.click(screen.getByRole('button', { name: /go home/i }));
-    expect(window.location.pathname).toBe('/home');
+    expect(window.location.hash).toBe('#/home');
   });
 });

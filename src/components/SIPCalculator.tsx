@@ -466,8 +466,8 @@ export function SIPCalculator({ onNavigate }: SIPCalculatorProps) {
                     <th className="px-2 py-2 text-right text-xs font-medium text-gray-600">Pre-Tax Salary</th>
                     <th className="px-2 py-2 text-right text-xs font-medium text-gray-600">Post-Tax Salary</th>
                     <th className="px-2 py-2 text-right text-xs font-medium text-gray-600">Monthly SIP</th>
-                    <th className="px-2 py-2 text-right text-xs font-medium text-gray-600">Nominal Net Worth</th>
-                    <th className="px-2 py-2 text-right text-xs font-medium text-gray-600">Real Net Worth</th>
+                    <th className="px-2 py-2 text-right text-xs font-medium text-gray-600">Nominal Corpus</th>
+                    <th className="px-2 py-2 text-right text-xs font-medium text-gray-600">Real Corpus</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
@@ -484,10 +484,10 @@ export function SIPCalculator({ onNavigate }: SIPCalculatorProps) {
                         {formatIndianCurrency(p.sipAmount)}
                       </td>
                       <td className="px-2 py-2 text-right text-amber-600 font-semibold text-xs">
-                        {formatIndianCurrency(p.netWorthNominal)}
+                        {formatIndianCurrency(p.totalNominalValue)}
                       </td>
                       <td className="px-2 py-2 text-right text-purple-600 font-semibold text-xs">
-                        {formatIndianCurrency(p.netWorthReal)}
+                        {formatIndianCurrency(p.totalRealValue)}
                       </td>
                     </tr>
                   ))}

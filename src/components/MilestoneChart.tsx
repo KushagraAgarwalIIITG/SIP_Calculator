@@ -91,42 +91,21 @@ export function MilestoneChart({
 
         <Line
           type="monotone"
-          dataKey="Total Invested"
-          stroke="#94a3b8"
-          strokeWidth={2}
-          dot={false}
-        />
-        <Line
-          type="monotone"
-          dataKey="SIP Corpus"
-          stroke="#3b82f6"
-          strokeWidth={2.5}
-          dot={false}
-        />
-        <Line
-          type="monotone"
-          dataKey="Net Worth"
-          stroke="#f59e0b"
-          strokeWidth={2.5}
-          dot={false}
-        />
-        <Line
-          type="monotone"
           dataKey="Total Wealth"
           stroke="#10b981"
           strokeWidth={3}
           dot={false}
+          name="Total Wealth (Nominal)"
         />
-        {showInflationAdjusted && (
-          <Line
-            type="monotone"
-            dataKey="Total Wealth (Real)"
-            stroke="#8b5cf6"
-            strokeWidth={3}
-            dot={false}
-            strokeDasharray="5 5"
-          />
-        )}
+        <Line
+          type="monotone"
+          dataKey="Total Wealth (Real)"
+          stroke="#8b5cf6"
+          strokeWidth={3}
+          dot={false}
+          strokeDasharray="5 5"
+          name="Total Wealth (Real)"
+        />
 
         {milestones.map((milestone) => {
           const dataPoint = data.find((d) => d.age === milestone.age);

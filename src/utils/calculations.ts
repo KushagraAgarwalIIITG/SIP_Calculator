@@ -82,6 +82,24 @@ export function calculateSIPProjection(
   const stepUpMultiplier = 1 + annualStepUpPercent / 100;
 
   const monthlyROI = roiPercent / 100 / 12;
+  const initialTaxCalc = calculateTax(salary);
+
+  // Baseline row at current age before applying year-1 growth.
+  projections.push({
+    year: 0,
+    age: currentAge,
+    preTaxSalary: salary,
+    postTaxSalary: initialTaxCalc.postTaxSalary,
+    sipAmount: currentSIP,
+    yearlyInvestment: 0,
+    cumulativeInvestment: 0,
+    sipNominalValue: sipCorpusValue,
+    sipRealValue: sipCorpusValue,
+    netWorthNominal: netWorthValue,
+    netWorthReal: netWorthValue,
+    totalNominalValue: sipCorpusValue + netWorthValue,
+    totalRealValue: sipCorpusValue + netWorthValue
+  });
 
   for (let year = 1; year <= years; year++) {
     const taxCalc = calculateTax(salary);
