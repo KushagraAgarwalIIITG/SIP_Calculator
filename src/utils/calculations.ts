@@ -67,6 +67,7 @@ export function calculateSIPProjection(
   initialSIPAmount: number,
   roiPercent: number,
   years: number,
+  annualStepUpPercent: number,
   salaryPlateauLimit: number,
   inflationRate: number,
   currentAge: number,
@@ -78,6 +79,7 @@ export function calculateSIPProjection(
   let sipCorpusValue = 0;
   let netWorthValue = currentNetWorth;
   let salary = currentSalary;
+  const stepUpMultiplier = 1 + annualStepUpPercent / 100;
 
   const monthlyROI = roiPercent / 100 / 12;
 
@@ -115,8 +117,8 @@ export function calculateSIPProjection(
     });
 
     if (salary < salaryPlateauLimit) {
-      currentSIP = currentSIP * 1.10;
-      salary = Math.min(salary * 1.10, salaryPlateauLimit);
+      currentSIP = currentSIP * stepUpMultiplier;
+      salary = Math.min(salary * stepUpMultiplier, salaryPlateauLimit);
     }
   }
 

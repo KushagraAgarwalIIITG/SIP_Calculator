@@ -49,11 +49,11 @@ export function MilestoneChart({
 
   return (
     <ResponsiveContainer width="100%" height={500}>
-      <LineChart data={data} margin={{ top: 60, right: 30, left: 20, bottom: 5 }}>
+      <LineChart data={data} margin={{ top: 60, right: 30, left: 20, bottom: 40 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
         <XAxis
           dataKey="age"
-          label={{ value: 'Age', position: 'insideBottom', offset: -5 }}
+          label={{ value: 'Age', position: 'insideBottomRight', offset: -10 }}
           tick={{ fontSize: 12 }}
           type="number"
           domain={[minAge, maxAge]}
@@ -63,7 +63,7 @@ export function MilestoneChart({
           tick={{ fontSize: 12 }}
         />
         <Tooltip content={<CustomTooltip />} />
-        <Legend wrapperStyle={{ fontSize: '12px' }} verticalAlign="bottom" height={36} />
+        <Legend wrapperStyle={{ fontSize: '12px' }} verticalAlign="bottom" height={48} />
 
         {milestones.map((milestone) => {
           const dataPoint = data.find((d) => d.age === milestone.age);
